@@ -11,7 +11,7 @@ connection = sqlite3.connect("copia.sqlite")
 cursor = connection.cursor()
 
 
-@app.route("/", methods=['GET'])
+@app.route("/getAll", methods=['GET'])
 def getJSON():
 	#GET endpoint, returns parsed CSV as JSON
 
