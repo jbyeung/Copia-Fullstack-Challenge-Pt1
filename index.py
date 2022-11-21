@@ -22,13 +22,15 @@ def getJSON():
 	with sqlite3.connect('copia.sqlite') as conn:
 		cursor = conn.cursor()
 
-		sql = "SELECT json_object('id', id, 'firstName', firstName, 'lastName', lastName, 'street', street, 'city', city, 'state', state, 'postal', postal, 'country', country, 'email', email, 'phone', phone) AS json_result FROM (SELECT * FROM users);"
+		#sql = "SELECT json_object('id', id, 'firstName', firstName, 'lastName', lastName, 'street', street, 'city', city, 'state', state, 'postal', postal, 'country', country, 'email', email, 'phone', phone) AS json_result FROM (SELECT * FROM users);"
 
-		# sql = "SELECT * FROM users"
+		sql = "SELECT * FROM users"
 		cursor.execute(sql)
-		jsonData = json.dumps(cursor.fetchall())
+		res = [dict((cursor.description[i][0], value) \
+               for i, value in enumerate(row)) for row in cursor.fetchall()]
+
 		# print(time.time() - start)			#4.2 milliseconds
-		return jsonData
+		return json.dumps(res)
 
 
 
@@ -45,7 +47,7 @@ def init_db(connection):
 
 	query = """
 	CREATE TABLE IF NOT EXISTS users (
-		id INTEGER, 
+		id INTEGER PRIMARY KEY, 
 		firstName TEXT,
 		lastName TEXT,
 		street TEXT,
@@ -54,7 +56,8 @@ def init_db(connection):
 		postal TEXT,
 		country TEXT,
 		email TEXT, 
-		phone TEXT
+		phone TEXT,
+		unique (id)
 	);
 	"""
 
@@ -70,18 +73,6 @@ def init_db(connection):
 	#inject CSV data
 	insertData()
 
-
-#SQLite functions
-def create_connection(path):
-	# creates sql connection
-    connection = None
-    try:
-        connection = sqlite3.connect(path)
-        print("Connection to SQLite DB successful")
-    except sqlite3.Error as e:
-        print(f"The error '{e}' occurred")
-
-    return connection
 
 def insertData():
 	# reads CSV file and attempts to insert into table
@@ -101,7 +92,8 @@ def insertData():
 		try:
 			cursor.executemany(q, data)
 			connection.commit()
-			print("Query executed successfully")
+			print("Insert executed successfully")
+			connection.close()
 		except sqlite3.Error as e:
 			print(f"The error '{e}' occurred")
 			return
