@@ -19,9 +19,11 @@ def getJSON():
 	with sqlite3.connect('copia.sqlite') as conn:
 		cursor = conn.cursor()
 
-		sql = "SELECT * FROM users"
+		sql = "SELECT json_object('id', id, 'firstName', firstName, 'lastName', lastName, 'street', street, 'city', city, 'state', state, 'postal', postal, 'country', country, 'email', email, 'phone', phone) AS json_result FROM (SELECT * FROM users);"
+
+		# sql = "SELECT * FROM users"
 		cursor.execute(sql)
-		jsonData = json.dumps(cursor.fetchall(), indent = 1)
+		jsonData = json.dumps(cursor.fetchall())
 		# print(time.time() - start)			#4.2 milliseconds
 		return jsonData
 
