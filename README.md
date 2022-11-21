@@ -14,8 +14,7 @@
 # Instructions for running:
 Install python dependencies:
 
-> pip install flask
-> pip install phonenumbers
+> pip install flask flask-cors phonenumbers
 
 Run the Flask server:
 > python index.py

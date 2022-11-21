@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 import csv
 import json
 import time
@@ -7,6 +8,8 @@ import sqlite3
 
 
 app = Flask(__name__)
+CORS(app)
+
 connection = sqlite3.connect("copia.sqlite")
 cursor = connection.cursor()
 
