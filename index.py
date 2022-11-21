@@ -19,7 +19,7 @@ def getJSON():
 	with sqlite3.connect('copia.sqlite') as conn:
 		cursor = conn.cursor()
 
-		sql = "SELECT * FROM addresses"
+		sql = "SELECT * FROM users"
 		cursor.execute(sql)
 		jsonData = json.dumps(cursor.fetchall(), indent = 1)
 		# print(time.time() - start)			#4.2 milliseconds
@@ -39,7 +39,7 @@ def init_db(connection):
 	#creates empty table, then injects data from CSV file
 
 	query = """
-	CREATE TABLE IF NOT EXISTS addresses (
+	CREATE TABLE IF NOT EXISTS users (
 		id INTEGER, 
 		firstName TEXT,
 		lastName TEXT,
@@ -92,7 +92,7 @@ def insertData():
 
 		keys = ', '.join(row.keys())
 		valholders = ', '.join('?' * len(row))
-		q = 'INSERT INTO addresses ({}) VALUES ({})'.format(keys, valholders)
+		q = 'INSERT INTO users ({}) VALUES ({})'.format(keys, valholders)
 		try:
 			cursor.executemany(q, data)
 			connection.commit()
